@@ -4,6 +4,10 @@ Main repository for the TiDB LATAM Hackathon. Build something with **TiDB Cloud*
 
 **Event ends 2026-09-05.** All AWS accounts, EC2 instances, S3 data, TiDB clusters, and API keys are deleted after that date.
 
+**Two regions, on purpose.** The AWS console and your EC2 instance are in `sa-east-1` (São Paulo). Bedrock is in `ap-southeast-1` (Singapore). That split is expected, not a bug — point your Bedrock client at Singapore and everything works.
+
+**Install [Kiro](https://kiro.dev) before you arrive.** AWS access is handed out on site; Kiro is not, and the venue wifi is not the place to download an IDE.
+
 ---
 
 ## Start Here
@@ -24,7 +28,8 @@ Build a generative AI application in one afternoon. **That is the whole brief** 
 |---|---|
 | **Date** | Wed 02 Sep 2026, São Paulo |
 | **Build sprint** | 2h30 |
-| **Squad size** | 3–4 people |
+| **Teams** | 10 |
+| **Team size** | 4–5 people |
 | **Demo** | 2 minutes max |
 | **Total points** | 100 |
 
@@ -83,7 +88,7 @@ You are free to build however you like, but these are what the event provides an
 
 ### Kiro — AI development tool
 
-We expect teams to build with **[Kiro](https://kiro.dev)**. Commit your `.kiro/` specs to your repository — they are read during judging and are among the cheapest points on the board.
+We expect teams to build with **[Kiro](https://kiro.dev)**. **Install it yourself before the event** — it is not handed out on site, and downloading an IDE over venue wifi will cost you part of your sprint. Commit your `.kiro/` specs to your repository — they are read during judging and are among the cheapest points on the board.
 
 **Suggested way to work:** put **one laptop on the screen and let the AI drive the development and deployment**, while the whole team watches, argues, and steers. Two and a half hours is not enough time for four people to write code in parallel and merge it. It *is* enough time for four people to out-think a problem together while one machine does the typing.
 
@@ -91,7 +96,7 @@ Assign roles instead of splitting the codebase: **data · AI · interface · pit
 
 ### AWS EC2
 
-One instance per team, in **sa-east-1 (São Paulo)**, tagged with your team name. Connect via Session Manager — no SSH key, no open port 22. See the [participant guide](PARTICIPANT-GUIDE.md).
+One instance per team, in **sa-east-1 (São Paulo)**, tagged with your team's username. Connect via Session Manager — no SSH key, no open port 22. See the [participant guide](PARTICIPANT-GUIDE.md).
 
 **Ports 8000–8999 and 3000 are open inbound**, so a web app you run there is reachable at `http://<instance-public-ip>:8501`. Bind to `0.0.0.0`, not `127.0.0.1`. The public IP changes on every stop/start, and anything you serve is public — no auth, no TLS.
 
@@ -99,7 +104,7 @@ Deploying there is worth points, but do not let it eat your submission window. R
 
 ### Amazon Bedrock
 
-Your Bedrock API key is issued for **ap-southeast-1 (Singapore)** — not São Paulo. Point your client at that region; the key will not work anywhere else.
+Your Bedrock API key is issued for **ap-southeast-1 (Singapore)** — not São Paulo, where the console and your EC2 instance live. That is deliberate. Point your client at Singapore; the key will not work anywhere else. A client left on `sa-east-1` fails with an **authentication / access-denied error**, not a "model not found" — so when you see "denied", check the region before anything else.
 
 Available on-demand models there:
 
@@ -110,15 +115,15 @@ Available on-demand models there:
 | Embeddings | `cohere.embed-english-v3` — 1024 dimensions |
 | Embeddings (multilingual) | `cohere.embed-multilingual-v3` — 1024 dimensions |
 
-`amazon.titan-embed-text-v2:0` and the Mistral models are **not** available in ap-southeast-1. If you want Titan embeddings, use TiDB's built-in `EMBED_TEXT()` instead — it does not go through Bedrock at all.
+`amazon.titan-embed-text-v2:0` and the Mistral models are **not** available in ap-southeast-1. If you want Titan embeddings, use TiDB's built-in `EMBED_TEXT()` instead — it does not go through Bedrock at all, needs no key, and is the shortest path to working vector search.
 
 ### Using the key
 
-Put it in your config file, never in a commit:
+Copy these two blocks as they are — the region is already correct. Put the key in your config file, never in a commit:
 
 ```bash
 # .env  —  git-ignored
-AWS_BEARER_TOKEN_BEDROCK=<the key handed to you on site>
+AWS_BEARER_TOKEN_BEDROCK=<the key handed to your team on site>
 AWS_REGION=ap-southeast-1
 ```
 
@@ -128,7 +133,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # exports AWS_BEARER_TOKEN_BEDROCK into the environment
 
-bedrock = boto3.client("bedrock-runtime", region_name="ap-southeast-1")
+bedrock = boto3.client("bedrock-runtime", region_name="ap-southeast-1")  # Singapore, not São Paulo
 
 def ask(prompt: str) -> str:
     resp = bedrock.invoke_model(
@@ -144,15 +149,15 @@ def ask(prompt: str) -> str:
 
 `boto3` picks the bearer token up from the environment automatically — you do not need AWS credentials on the machine for this. Requires `boto3 >= 1.39`; run `pip install -U boto3` if `invoke_model` returns an auth error.
 
-One key per group. Do not share it between groups, and do not commit it.
+One key per team. Do not share it between teams, and do not commit it.
 
-**A note on latency:** Singapore is a long way from São Paulo — expect a few hundred milliseconds per round trip. Fine for a demo, worth knowing if you are chaining many calls in a loop.
+**A note on latency:** Singapore is a long way from São Paulo — expect a few hundred milliseconds per round trip. Fine for a demo, worth knowing if you are chaining many calls in a loop. Batch your calls; do not chain them one at a time inside a loop.
 
 **Nothing here is prescriptive.** Use a different model, a different provider, or no LLM API at all if your idea is better served that way. Explore.
 
 ### TiDB vector search — the short way
 
-TiDB can generate the embeddings for you, so you never call an embedding API from your own code:
+TiDB can generate the embeddings for you, so you never call an embedding API from your own code — and no Bedrock key is involved:
 
 ```sql
 CREATE TABLE flight_notes (
@@ -177,17 +182,17 @@ Insert text, get vectors.
 
 ## What We Provide, On Site
 
-Nothing below is handed out in advance. Collect it from an organizer at the venue.
+Nothing below is handed out in advance. Collect it from an organizer at the venue. Kiro is not on this list — install it yourself before you arrive.
 
 | Item | Per | Notes |
 |---|---|---|
-| **AWS account** | one per group | IAM user `latam-hackathon-0XX`. Temporary password, changed on first sign-in, **MFA required**. |
-| **Bedrock API key** | one per group | Valid in **ap-southeast-1**, not sa-east-1. Issued after MFA is confirmed. One key per group — never shared. |
-| **EC2 instance** | one per group | sa-east-1, pre-tagged to your group. |
-| **S3 folder** | one per group | `s3://tidb-latam-hackathon-2026-048364544505/latam-hackathon-0XX/` |
-| **airportdb dataset** | one per group | Import into your own TiDB Cloud Starter cluster. |
+| **AWS account** | one per team | IAM user `latam-hackathon-0XX`. Temporary password, changed on first sign-in, **MFA required**. |
+| **Bedrock API key** | one per team | Valid in **ap-southeast-1**, not sa-east-1. Issued after MFA is confirmed. One key per team — never shared. |
+| **EC2 instance** | one per team | sa-east-1, pre-tagged to your team. |
+| **S3 folder** | one per team | `s3://tidb-latam-hackathon-2026-048364544505/latam-hackathon-0XX/` |
+| **airportdb dataset** | one per team | Import into your own TiDB Cloud Starter cluster. |
 
-You register your own **TiDB Cloud Starter** cluster — it is free and takes about a minute.
+You register your own **TiDB Cloud Starter** cluster — it is free and takes about a minute. Organizers never hold your TiDB credentials; they are yours from the moment you create the cluster.
 
 **Key discipline:** keys live in the `.env` file on your machine or EC2, and nowhere else. Never in a commit, a README, a screenshot, or a Dockerfile. All keys are revoked when the event ends.
 
@@ -203,7 +208,7 @@ projects/
 └── latam-hackathon-010/
 ```
 
-One directory per team, empty by design. **Your directory name matches your AWS username, your EC2 `Participant` tag, and your S3 prefix** — all use the same hyphenated form. Do not rename it.
+One directory per team, empty by design. **Your directory name matches your AWS username, your EC2 `Participant` tag, and your S3 prefix** — all use the same hyphenated form. The EC2 tag is called `Participant` for historical reasons; the value in it is your team's username. Do not rename it.
 
 ---
 
@@ -273,9 +278,9 @@ PRs that modify another team's directory, repository configuration or CI will be
 ## Rules
 
 - `main` is protected. Only organizers can merge.
-- Secret Scanning and Push Protection are enabled. Never commit an API key, TiDB password, AWS credential, or IP allowlist.
-- Each participant gets one AWS account, one EC2 instance, one S3 prefix, and one model API key. Do not share credentials between teams.
-- Enroll MFA on first sign-in. Organizers verify this before handing out API keys.
+- Secret Scanning and Push Protection are enabled. Never commit an API key, TiDB password, or AWS credential.
+- Each team gets one AWS account, one EC2 instance, one S3 prefix, and one model API key, shared by that team. Do not share credentials between teams.
+- Enroll MFA on first sign-in. Organizers verify this before handing out the Bedrock API key.
 
 ---
 
@@ -288,7 +293,7 @@ PRs that modify another team's directory, repository configuration or CI will be
 | Shared S3 bucket | `s3://tidb-latam-hackathon-2026-048364544505/<your-username>/` |
 | TiDB Cloud | <https://tidbcloud.com> — register your own Starter cluster |
 | TiDB docs | <https://docs.pingcap.com/tidbcloud/> |
-| Kiro | <https://kiro.dev> |
+| Kiro | <https://kiro.dev> — install it before the event |
 | Bedrock region | `ap-southeast-1` — Claude 3.5 Sonnet · Claude 3 Haiku · Cohere Embed v3 |
 | Event brief | [Ask the Airport.pdf](Ask%20the%20Airport.pdf) |
 | Session Manager plugin | <https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html> |
