@@ -194,84 +194,27 @@ Nothing below is handed out in advance. Collect it from an organizer at the venu
 
 You register your own **TiDB Cloud Starter** cluster — it is free and takes about a minute. Organizers never hold your TiDB credentials; they are yours from the moment you create the cluster.
 
+Your AWS username, your EC2 `Participant` tag and your S3 prefix all use the same hyphenated form, `latam-hackathon-0XX`. The EC2 tag is called `Participant` for historical reasons; the value in it is your team's username.
+
 **Key discipline:** keys live in the `.env` file on your machine or EC2, and nowhere else. Never in a commit, a README, a screenshot, or a Dockerfile. All keys are revoked when the event ends.
-
----
-
-## Repository Layout
-
-```
-projects/
-├── latam-hackathon-001/   ← empty until your team submits
-├── latam-hackathon-002/
-├── ...
-└── latam-hackathon-010/
-```
-
-One directory per team, empty by design. **Your directory name matches your AWS username, your EC2 `Participant` tag, and your S3 prefix** — all use the same hyphenated form. The EC2 tag is called `Participant` for historical reasons; the value in it is your team's username. Do not rename it.
 
 ---
 
 ## How to Submit
 
-Two phases. **Build in your own repository. Submit here at the end.**
+**Build in your team's own public GitHub repository. Do not fork this repo, and do not open a pull request here.**
 
-### Phase 1 — During the sprint: your own public repo
+1. Work in a repository your team owns, and create it **public**.
+2. It must contain your code, your `.kiro/` specs if you used Kiro, and a `SUBMISSION.md` at the root: what you built, how to run it, what you would do next.
+3. When you are done, comment on the pinned **Entregas** issue in this repository with three things: your team name, your repository URL, and your demo link — a 2-minute video or a live URL.
+4. That is the entire submission.
 
-Work in a repository you own. Do not wait on anyone's review and do not open PRs here mid-build.
+### The freeze — read this before you comment
 
-- Create it **public** — Part B of the score is verified by AI reading your public repo.
-- Commit your `.kiro/` specs.
-- Write a `SUBMISSION.md` at its root: what you built, how to run it, what you would do next.
-- Push before the deadline, and check the repo is actually public.
+At the deadline, organizers **fork every submitted repository**. That fork is the snapshot that gets judged.
 
-This is where you move fast for 2h30.
-
-### Phase 2 — At the end: submit your work here
-
-Once the project is done, copy its final state into your team directory in **this** repository and open a Pull Request.
-
-```bash
-# 1. Fork this repository on GitHub, then clone your fork
-git clone https://github.com/<your-username>/LatamHackathon.git
-cd LatamHackathon
-git checkout -b latam-hackathon-0XX
-
-# 2. Copy your finished project in — exclude .git, .env and any secret
-rsync -a --exclude '.git' --exclude '.env' --exclude 'venv' \
-      ~/your-project/ projects/latam-hackathon-0XX/
-
-# 3. Commit and push to your fork
-git add projects/latam-hackathon-0XX/
-git commit -m "latam-hackathon-0XX: <what you built>"
-git push origin latam-hackathon-0XX
-```
-
-Then open a Pull Request against `main`. Organizers merge it.
-
-### What your directory must contain
-
-```
-projects/latam-hackathon-0XX/
-├── README.md        # what it is, architecture, screenshots, how to run
-├── SUBMISSION.md    # the same file as in your own repo
-├── src/             # your source code
-├── .kiro/           # your Kiro specs, if you used Kiro
-└── docs/            # optional
-```
-
-Link back to your own public repository from your `README.md` — judges look at both.
-
-### PR Rules
-
-| Rule | Why |
-|---|---|
-| Touch only your own `projects/latam-hackathon-0XX/` directory | GitHub write access cannot be scoped per-directory, so this is enforced by review |
-| Do not copy your project's `.git` directory in | Submit the files, not the repository |
-| No secrets in any file, screenshot or commit | Push Protection will block the push |
-| Keep the directory name unchanged | Permission policies match on it |
-
-PRs that modify another team's directory, repository configuration or CI will be closed.
+- A fork does not sync. Anything you push after the deadline is **not judged**. Push everything first, then comment.
+- Check the repository is actually **public** before you comment — a private repo cannot be forked, so it cannot be scored.
 
 ---
 
@@ -281,6 +224,7 @@ PRs that modify another team's directory, repository configuration or CI will be
 - Secret Scanning and Push Protection are enabled. Never commit an API key, TiDB password, or AWS credential.
 - Each team gets one AWS account, one EC2 instance, one S3 prefix, and one model API key, shared by that team. Do not share credentials between teams.
 - Enroll MFA on first sign-in. Organizers verify this before handing out the Bedrock API key.
+- By submitting, your team agrees that organizers keep an archived copy of the repository — the fork made at the deadline.
 
 ---
 

@@ -312,52 +312,24 @@ This repository has **Secret Scanning and Push Protection enabled**. A push cont
 
 ## 10. Submitting Your Work
 
-Two phases. **Build in your team's own repository during the sprint. Submit here at the end.**
+**Build in your team's own public GitHub repository, then tell us where it is.** Do not fork the main repository and do not open a pull request there.
 
 > **Install Kiro before you arrive** — get it from [kiro.dev](https://kiro.dev). It is not provided on site and it is not preinstalled on your instance; AWS access is provided, Kiro is not. Building with Kiro is recommended and committing your `.kiro/` specs scores points.
 
-### Phase 1 — during the sprint
+1. Build in your team's own **public** GitHub repository. Move fast, do not wait on reviews.
+2. The repo must contain your code, your `.kiro/` specs if you used Kiro, and a `SUBMISSION.md` at the root — what you built, how to run it, what you would do next.
+3. When you are done, comment on the pinned **"Entregas"** issue in the main repository with your team name, your repository URL, and your demo link (a 2-minute video or a live URL).
+4. Done. That is the whole submission.
 
-Work in a **public** repository your team owns. Move fast, do not wait on reviews.
+### The deadline is a freeze
 
-- Commit your `.kiro/` specs.
-- Write a `SUBMISSION.md` at the root: what you built, how to run it, what is next.
-- Push before the deadline and confirm the repo is actually public — Part B of the score is verified by AI reading it.
+Organizers fork every submitted repo at the deadline, and **that fork is what gets judged**.
 
-### Phase 2 — at the end
+- Forks do not sync. Anything you push after the deadline is not judged. **Push first, then comment.**
+- Verify the repo is genuinely public before you comment — a private repo cannot be forked and cannot be scored.
+- By submitting, your team agrees that organizers keep an archived copy of the repository (the fork).
 
-Copy your finished project into your team directory in the main repository and open a Pull Request. You do **not** have write access there, so fork it.
-
-```bash
-# 1. Fork https://github.com/ayenller/LatamHackathon, then clone your fork
-git clone https://github.com/<your-username>/LatamHackathon.git
-cd LatamHackathon
-git checkout -b latam-hackathon-0XX
-
-# 2. Copy your project in — leave out .git, .env and anything secret
-rsync -a --exclude '.git' --exclude '.env' --exclude 'venv' \
-      ~/your-project/ projects/latam-hackathon-0XX/
-
-# 3. Push to your fork, then open a PR against main
-git add projects/latam-hackathon-0XX/
-git commit -m "latam-hackathon-0XX: <what you built>"
-git push origin latam-hackathon-0XX
-```
-
-Your team's directory starts empty. Fill it with:
-
-```
-projects/latam-hackathon-0XX/
-├── README.md        # description, architecture, screenshots, how to run
-├── SUBMISSION.md    # same file as in your own repo
-├── src/             # source code
-├── .kiro/           # Kiro specs, if you used Kiro
-└── docs/            # optional
-```
-
-Link back to your team's own public repo from the `README.md`.
-
-**PRs that touch files outside your team's own directory will be rejected.** Never copy your project's `.git` directory in — submit the files, not the repository.
+Leave `.env` out of the repository, along with anything else secret. Your own repo and this one both have **Secret Scanning and Push Protection enabled**: a push containing a key will be blocked.
 
 ---
 
@@ -365,4 +337,4 @@ Link back to your team's own public repo from the `README.md`.
 
 After the event, all of the following are permanently deleted: your team's AWS account, its EC2 instance and disk, its S3 folder and contents, TiDB clusters, and every API key.
 
-**Push anything you want to keep to your GitHub fork before that date.**
+**Push anything you want to keep to your team's GitHub repository before that date.**
