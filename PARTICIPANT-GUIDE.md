@@ -8,6 +8,8 @@ Event ends **2026-09-05**. All accounts and resources are deleted after that dat
 
 ## 1. Sign In
 
+**Your team is assigned at the venue.** Teams are formed on the morning of the event from the confirmed attendee list. The number you are handed — `latam-hackathon-0XX` — identifies your AWS user, your EC2 instance tag and your S3 prefix. Nothing below works until you have it, and nothing here needs doing before the event.
+
 ```
 https://tidb-latam-hackathon.signin.aws.amazon.com/console
 ```
@@ -314,7 +316,9 @@ This repository has **Secret Scanning and Push Protection enabled**. A push cont
 
 **Build in your team's own public GitHub repository, then tell us where it is.** Do not fork the main repository and do not open a pull request there.
 
-> **Install Kiro before you arrive** — get it from [kiro.dev](https://kiro.dev). It is not provided on site and it is not preinstalled on your instance; AWS access is provided, Kiro is not. Building with Kiro is recommended and committing your `.kiro/` specs scores points.
+> **Kiro is installed on the day**, during the setup block — get it from [kiro.dev](https://kiro.dev). It is not preinstalled on your instance. Building with Kiro is recommended, and committing your `.kiro/` specs scores points.
+>
+> **If you ask Kiro to pick the problem, it will pick the same one as the other nine teams. Choosing the problem is yours to make.**
 
 1. Build in your team's own **public** GitHub repository. Move fast, do not wait on reviews.
 2. The repo must contain your code, your `.kiro/` specs if you used Kiro, and a `SUBMISSION.md` at the root — what you built, how to run it, what you would do next.

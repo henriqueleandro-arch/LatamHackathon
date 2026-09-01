@@ -6,7 +6,7 @@ Main repository for the TiDB LATAM Hackathon. Build something with **TiDB Cloud*
 
 **Two regions, on purpose.** The AWS console and your EC2 instance are in `sa-east-1` (São Paulo). Bedrock is in `ap-southeast-1` (Singapore). That split is expected, not a bug — point your Bedrock client at Singapore and everything works.
 
-**Install [Kiro](https://kiro.dev) before you arrive.** AWS access is handed out on site; Kiro is not, and the venue wifi is not the place to download an IDE.
+**Nothing is done in advance.** Teams are formed on the morning of the event from the confirmed attendee list and announced at the venue. Everything else — your AWS account, your Bedrock key, installing Kiro, your TiDB cluster — happens on site, in a guided setup block before the 2h30 build clock starts.
 
 ---
 
@@ -79,6 +79,8 @@ Questions worth asking the data:
 - **Travel agent with memory** — learn a passenger's preferences in one conversation, apply them in the next. Rebook them when their flight slips three hours.
 - **Semantic concierge** — vector search over routes and notes for "find me something like this".
 - **Something else entirely** — genuinely, the creativity points are real.
+
+> **If you ask Kiro to pick the problem, it will pick the same one as the other nine teams. Choosing the problem is yours to make.**
 
 ---
 
@@ -180,9 +182,22 @@ Insert text, get vectors.
 
 ---
 
+## Setup, On Site
+
+Nothing happens before the event. This block runs at the venue, **before the 2h30 build clock starts**.
+
+1. **Get your team.** Teams are formed on the morning from the confirmed list and announced at the venue. The number you are given — `latam-hackathon-0XX` — is your AWS username, your EC2 tag and your S3 prefix, so everything else depends on it.
+2. **Sign in to AWS** and enrol MFA. Organizers verify this before handing out keys.
+3. **Collect your Bedrock API key** — issued for `ap-southeast-1`.
+4. **Install Kiro** from [kiro.dev](https://kiro.dev) and sign in.
+5. **Register your team's TiDB Cloud Starter cluster** — free, about a minute.
+6. **Import the dataset** into that cluster.
+
+---
+
 ## What We Provide, On Site
 
-Nothing below is handed out in advance. Collect it from an organizer at the venue. Kiro is not on this list — install it yourself before you arrive.
+Nothing below is handed out in advance. Collect it from an organizer at the venue, during the setup block.
 
 | Item | Per | Notes |
 |---|---|---|
